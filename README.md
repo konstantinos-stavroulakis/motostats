@@ -1,3 +1,0 @@
-# motostats
-test project
-asasa

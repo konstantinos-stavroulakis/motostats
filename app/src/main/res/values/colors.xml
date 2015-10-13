@@ -10,16 +10,15 @@
     <!--<color name="icons">#212121</color>-->
     <!--<color name="divider">#B6B6B6</color>-->
 
-
-
-    <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
-    <color name="primary_light">#FFCDD2</color>
-    <color name="colorAccent">#212121</color>
+    <color name="colorPrimary">#616161</color>
+    <color name="colorPrimaryDark">#212121</color>
+    <color name="primary_light">#F5F5F5</color>
+    <color name="colorAccent">#FF5252</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
-    <color name="icons">#FFFFFF</color>
+    <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
+
 
     <color name="layoutBg">#eceded</color>
 

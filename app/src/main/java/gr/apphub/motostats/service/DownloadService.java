@@ -55,8 +55,6 @@ public class DownloadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.i(TAG, "onHandleIntent()");
-
-        // get inputs from intent
         url = intent.getExtras().getString("url");
         SDCardRoot = new File(
                 android.os.Environment.getExternalStorageDirectory(),
