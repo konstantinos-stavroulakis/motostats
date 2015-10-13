@@ -1,5 +1,10 @@
 package gr.apphub.motostats;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,11 +15,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import gr.apphub.motostats.db.HotOrNotMyVehicles;
+import gr.apphub.motostats.service.DownloadService;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -22,6 +29,8 @@ public class MainActivity extends AppCompatActivity
     Fragment objFragment = null;
     HotOrNotMyVehicles entry;
     int vehSum = 0;
+ProgressDialog pd;
+    String VEHICLES_URL = "http://kostas-menu.gr/fuellog/vehicles.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +103,11 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id. action_refresh) {
+            startDownloadService();
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -139,5 +153,52 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void DownloadJson() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DownloadService.TRANSACTION_DONE);
+       registerReceiver(jsonReceiver, intentFilter);
+        Intent i = new Intent(this, DownloadService.class);
+        i.putExtra("url", VEHICLES_URL);
+       startService(i);
+        pd = ProgressDialog.show(this, "Refresh Data",
+                "Go intent service go!");
+    }
+
+    public void startDownloadService() {
+
+        DownloadJson();
+
+    }
+
+    private BroadcastReceiver jsonReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String location = intent.getExtras().getString("location");
+            String url = intent.getExtras().getString("url");
+            Log.d("---location---", location);
+            Log.d("---url---", url);
+
+            if (location == null || location.length() == 0) {
+                Toast.makeText(context, "Failed to download json",
+                        Toast.LENGTH_LONG).show();
+            }
+            pd.dismiss();
+
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        try {
+           unregisterReceiver(jsonReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
